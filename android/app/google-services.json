@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "771176959094",
+    "project_id": "fir-gemini-roocode",
+    "storage_bucket": "fir-gemini-roocode.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:771176959094:android:8df713a23ec1f397d92357",
+        "android_client_info": {
+          "package_name": "com.example.firebase_roocode_project_notes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLqXBNkteYz1LM-3qcOmm3B1AVwOk_w_8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
