@@ -24,6 +24,11 @@ Optimized media loading via Cloudinary CDN
 Secure API keys managed through Cloudflare
 Smooth cross-platform experience
 
+
+
+https://github.com/user-attachments/assets/ebdc0428-059e-46b1-ad35-f56c813cbb2e
+
+
 <img width="108" height="240" alt="Screenshot_2026-01-02-21-27-13-991_com example firebase_roocode_project_notes" src="https://github.com/user-attachments/assets/86a7c95a-ec04-4c39-89ee-7fcd1f52c9a4" />
 
 <img width="108" height="240" alt="Screenshot_2026-01-02-21-27-50-724_com example firebase_roocode_project_notes" src="https://github.com/user-attachments/assets/23e28d58-a4c9-4640-a847-2c73daa10513" />
