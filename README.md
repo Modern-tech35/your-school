@@ -3,22 +3,29 @@ Educational Platform App
 A modern cross-platform educational platform built with Flutter for Android & iOS.
 
 🛠 Tech Stack
+
 Flutter (Mobile development)
 Firebase Auth (User authentication)
 Cloud Firestore (Real-time database)
 Shared Preferences (Local session storage)
 Cloudinary + Cloudflare (Secure and optimized media storage & delivery)
+
 👥 User Roles
+
 🎓 Student: Access learning content and resources
 🧑‍🏫 Admin/Teacher: Manage content, users, and analytics
+
 📚 Features
+
 Supports videos, images, and documents
 Real-time sync via Firestore
 Fast search and filtering system
 Auto-login with saved sessions
 Secure media delivery via Cloudinary CDN
 Responsive, modern UI
+
 ⚡ Performance & Security
+
 Real-time updates with Firebase
 Optimized media loading via Cloudinary CDN
 Secure API keys managed through Cloudflare
