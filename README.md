@@ -1,6 +1,6 @@
 Educational Platform App
 
-A modern cross-platform educational platform built with Flutter for Android & iOS.
+A modern cross-platform educational platform built with Flutter for Android & Web.
 
 🛠 Tech Stack
 
