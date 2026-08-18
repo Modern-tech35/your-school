@@ -1,4 +1,4 @@
-name: firebase_roocode_project_notes
+name: yourschool
 description: "A new Flutter project."
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -23,6 +23,7 @@ dependencies:
   # Firebase dependencies
   firebase_core: ^3.0.0
   firebase_auth: ^5.0.0
+  google_sign_in: ^6.2.2
   cloud_firestore: ^5.0.0
   video_player: ^2.8.6
   flutter_pdfview: ^1.3.2
@@ -31,6 +32,8 @@ dependencies:
 
 dev_dependencies:
   flutter_test:
+    sdk: flutter
+  integration_test:
     sdk: flutter
 
 
@@ -64,5 +67,4 @@ flutter:
 
 flutter_launcher_icons:
   android: true
-  ios: true
   image_path: "assets/launcher_icon/launcher_icon.png"

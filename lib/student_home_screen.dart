@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'gradient_app_bar.dart';
+import 'lesson_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,7 +31,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
+      appBar: GradientAppBar(
         title: const Text('Lessons'),
         leading: IconButton(
           icon: const Icon(Icons.menu),
@@ -133,89 +135,16 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                   itemCount: lessons.length,
                   itemBuilder: (context, index) {
                     final lesson = lessons[index];
-                    return Card(
-                      elevation: 4,
-                      margin: const EdgeInsets.only(bottom: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                    return LessonCard(
+                      lesson: lesson,
+                      onTap: () => Navigator.pushNamed(
+                        context,
+                        '/lesson_details',
+                        arguments: lesson,
                       ),
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            '/lesson_details',
-                            arguments: lesson,
-                          );
-                        },
-                        borderRadius: BorderRadius.circular(12),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 60,
-                                height: 60,
-                                decoration: BoxDecoration(
-                                  color: const Color(0x264FC3F7),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Icon(
-                                  lesson.contentType == 'video' ? Icons.play_circle_fill : Icons.picture_as_pdf,
-                                  size: 30,
-                                  color: const Color(0xFF4FC3F7),
-                                ),
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      lesson.title,
-                                      style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      lesson.description,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey[600],
-                                      ),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Row(
-                                      children: [
-                                        Icon(
-                                          lesson.contentType == 'video' ? Icons.video_library : Icons.description,
-                                          size: 16,
-                                          color: Colors.grey,
-                                        ),
-                                        const SizedBox(width: 4),
-                                        Text(
-                                          lesson.contentType.toUpperCase(),
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.grey[600],
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const Icon(
-                                Icons.arrow_forward_ios,
-                                color: Colors.grey,
-                              ),
-                            ],
-                          ),
-                        ),
+                      trailing: const Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.grey,
                       ),
                     );
                   },
@@ -242,8 +171,12 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
                 userName = profile.name;
               }
               return DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Color(0xFF4FC3F7),
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF4FC3F7), Color(0xFF0288D1)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -322,14 +255,13 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
           ),
           TextButton(
             onPressed: () async {
-              Navigator.pop(context);
+              final navigator = Navigator.of(context);
+              navigator.pop();
               // Implement logout logic
               await FirebaseAuth.instance.signOut();
               final prefs = await SharedPreferences.getInstance();
               await prefs.clear();
-              if (mounted) {
-                Navigator.of(context).pushNamedAndRemoveUntil('/auth', (route) => false);
-              }
+              navigator.pushNamedAndRemoveUntil('/auth', (route) => false);
             },
             child: const Text('Logout'),
           ),

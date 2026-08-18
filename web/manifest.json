@@ -1,6 +1,6 @@
 {
-    "name": "firebase_roocode_project_notes",
-    "short_name": "firebase_roocode_project_notes",
+    "name": "Your school",
+    "short_name": "Your school",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

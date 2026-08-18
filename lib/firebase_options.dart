@@ -16,16 +16,11 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
-      case TargetPlatform.iOS:
-        return ios;
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -56,13 +51,13 @@ class DefaultFirebaseOptions {
     storageBucket: 'fir-gemini-roocode.firebasestorage.app',
   );
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDC2k9yTDzZJTlD05yynA23l0qTghmxXb8',
-    appId: '1:771176959094:ios:6df99b93aaa651aad92357',
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyB_Ea-VUH1EnlXbbA-gaw-aw9pdAx0WmEQ',
+    appId: '1:771176959094:web:dcf9823631e764aed92357',
     messagingSenderId: '771176959094',
     projectId: 'fir-gemini-roocode',
+    authDomain: 'fir-gemini-roocode.firebaseapp.com',
     storageBucket: 'fir-gemini-roocode.firebasestorage.app',
-    iosBundleId: 'com.example.firebaseRoocodeProjectNotes',
+    measurementId: 'G-N8E3LFEDBM',
   );
-
 }

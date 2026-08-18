@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
+import 'gradient_app_bar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -73,6 +74,7 @@ class _LessonDetailsScreenState extends State<LessonDetailsScreen> {
       });
     }
 
+    if (!mounted) return;
     setState(() {
       _isFavorited = !_isFavorited;
     });
@@ -89,7 +91,7 @@ class _LessonDetailsScreenState extends State<LessonDetailsScreen> {
     final lesson = ModalRoute.of(context)!.settings.arguments as Lesson;
 
     return Scaffold(
-      appBar: AppBar(
+      appBar: GradientAppBar(
         title: Text(lesson.title),
         actions: [
           IconButton(
@@ -122,7 +124,7 @@ class _LessonDetailsScreenState extends State<LessonDetailsScreen> {
                           width: 50,
                           height: 50,
                           decoration: BoxDecoration(
-                            color: const Color(0xFF001F3F).withOpacity(0.1),
+                            color: const Color(0xFF001F3F).withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Icon(
@@ -152,10 +154,10 @@ class _LessonDetailsScreenState extends State<LessonDetailsScreen> {
                                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                 decoration: BoxDecoration(
                                   color: lesson.contentType == 'video'
-                                      ? Colors.blue.withOpacity(0.1)
+                                      ? Colors.blue.withValues(alpha: 0.1)
                                       : lesson.contentType == 'pdf'
-                                          ? Colors.red.withOpacity(0.1)
-                                          : Colors.green.withOpacity(0.1),
+                                          ? Colors.red.withValues(alpha: 0.1)
+                                          : Colors.green.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Text(

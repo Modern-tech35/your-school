@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'gradient_app_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'models/lesson.dart';
@@ -17,13 +18,13 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 
     if (user == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Favorites')),
+        appBar: GradientAppBar(title: const Text('Favorites')),
         body: const Center(child: Text('Please log in to view favorites')),
       );
     }
 
     return Scaffold(
-      appBar: AppBar(
+      appBar: GradientAppBar(
         title: const Text('My Favorites'),
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -115,7 +116,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                               width: 60,
                               height: 60,
                               decoration: BoxDecoration(
-                                color: const Color(0xFF001F3F).withOpacity(0.1),
+                                color: const Color(0xFF001F3F).withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Icon(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'gradient_app_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'models/lesson.dart';
@@ -143,7 +144,7 @@ class _ManageLessonsScreenState extends State<ManageLessonsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: GradientAppBar(
         title: Text(_editingLesson != null ? 'Edit Lesson' : 'Manage Lessons'),
         actions: [
           if (_editingLesson == null)
@@ -186,47 +187,37 @@ class _ManageLessonsScreenState extends State<ManageLessonsScreen> {
                         style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                       ),
                       const SizedBox(height: 8),
-                      Column(
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: RadioListTile<String>(
-                                  title: const Text('Video'),
-                                  value: 'video',
-                                  groupValue: _contentType,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _contentType = value!;
-                                    });
-                                  },
+                      RadioGroup<String>(
+                        groupValue: _contentType,
+                        onChanged: (value) {
+                          setState(() {
+                            _contentType = value!;
+                          });
+                        },
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: RadioListTile<String>(
+                                    title: const Text('Video'),
+                                    value: 'video',
+                                  ),
                                 ),
-                              ),
-                              Expanded(
-                                child: RadioListTile<String>(
-                                  title: const Text('PDF'),
-                                  value: 'pdf',
-                                  groupValue: _contentType,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _contentType = value!;
-                                    });
-                                  },
+                                Expanded(
+                                  child: RadioListTile<String>(
+                                    title: const Text('PDF'),
+                                    value: 'pdf',
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          RadioListTile<String>(
-                            title: const Text('Image'),
-                            value: 'image',
-                            groupValue: _contentType,
-                            onChanged: (value) {
-                              setState(() {
-                                _contentType = value!;
-                              });
-                            },
-                          ),
-                        ],
+                              ],
+                            ),
+                            RadioListTile<String>(
+                              title: const Text('Image'),
+                              value: 'image',
+                            ),
+                          ],
+                        ),
                       ),
 
                       const SizedBox(height: 16),
@@ -406,7 +397,7 @@ class _ManageLessonsScreenState extends State<ManageLessonsScreen> {
                             width: 40,
                             height: 40,
                             decoration: BoxDecoration(
-                              color: const Color(0xFF001F3F).withOpacity(0.1),
+                              color: const Color(0xFF001F3F).withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Icon(

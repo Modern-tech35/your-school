@@ -1,6 +1,8 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'gradient_app_bar.dart';
+import 'lesson_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'models/lesson.dart';
@@ -79,7 +81,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
+      appBar: GradientAppBar(
         title: Text('$_currentUserName Dashboard'),
         leading: IconButton(
           icon: const Icon(Icons.menu),
@@ -219,46 +221,27 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     itemCount: lessons.length,
                     itemBuilder: (context, index) {
                       final lesson = lessons[index];
-                      return Card(
-                        elevation: 2,
-                        margin: const EdgeInsets.only(bottom: 8),
-                        child: ListTile(
-                          leading: Container(
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF001F3F).withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Icon(
-                              lesson.contentType == 'video'
-                                  ? Icons.play_circle_fill
-                                  : lesson.contentType == 'pdf'
-                                  ? Icons.picture_as_pdf
-                                  : Icons.image,
-                              size: 20,
-                              color: const Color(0xFF001F3F),
-                            ),
-                          ),
-                          title: Text(lesson.title),
-                          subtitle: Text(
-                            '${lesson.contentType.toUpperCase()} • ${_formatDate(lesson.createdAt)}',
-                          ),
-                          trailing: PopupMenuButton<String>(
-                            onSelected: (value) =>
-                                _handleLessonAction(value, lesson),
-                            itemBuilder: (BuildContext context) =>
-                                <PopupMenuEntry<String>>[
-                                  const PopupMenuItem<String>(
-                                    value: 'edit',
-                                    child: Text('Edit'),
-                                  ),
-                                  const PopupMenuItem<String>(
-                                    value: 'delete',
-                                    child: Text('Delete'),
-                                  ),
-                                ],
-                          ),
+                      return LessonCard(
+                        lesson: lesson,
+                        onTap: () => Navigator.pushNamed(
+                          context,
+                          '/lesson_details',
+                          arguments: lesson,
+                        ),
+                        trailing: PopupMenuButton<String>(
+                          onSelected: (value) =>
+                              _handleLessonAction(value, lesson),
+                          itemBuilder: (context) =>
+                              const <PopupMenuEntry<String>>[
+                                PopupMenuItem<String>(
+                                  value: 'edit',
+                                  child: Text('Edit'),
+                                ),
+                                PopupMenuItem<String>(
+                                  value: 'delete',
+                                  child: Text('Delete'),
+                                ),
+                              ],
                         ),
                       );
                     },
@@ -273,43 +256,57 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   }
 
   Widget _buildStatCard(String title, IconData icon, Future<int> countFuture) {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Icon(icon, size: 32, color: const Color(0xFF4FC3F7)),
-            const SizedBox(height: 8),
-            Text(
-              title,
-              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 8),
-            FutureBuilder<int>(
-              future: countFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  );
-                }
-                return Text(
-                  snapshot.data?.toString() ?? '0',
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF001F3F),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF4FC3F7), Color(0xFF0288D1)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF0288D1).withValues(alpha: 0.3),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          Icon(icon, size: 32, color: Colors.white),
+          const SizedBox(height: 8),
+          Text(
+            title,
+            style: const TextStyle(fontSize: 14, color: Colors.white70),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 8),
+          FutureBuilder<int>(
+            future: countFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
                   ),
                 );
-              },
-            ),
-          ],
-        ),
+              }
+              return Text(
+                snapshot.data?.toString() ?? '0',
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
@@ -351,7 +348,13 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
-            decoration: BoxDecoration(color: Color(0xFF4FC3F7)),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFF4FC3F7), Color(0xFF0288D1)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -431,15 +434,12 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           ),
           TextButton(
             onPressed: () async {
-              Navigator.pop(context);
+              final navigator = Navigator.of(context);
+              navigator.pop();
               await FirebaseAuth.instance.signOut();
               final prefs = await SharedPreferences.getInstance();
               await prefs.clear();
-              if (mounted) {
-                Navigator.of(
-                  context,
-                ).pushNamedAndRemoveUntil('/auth', (route) => false);
-              }
+              navigator.pushNamedAndRemoveUntil('/auth', (route) => false);
             },
             child: const Text('Logout'),
           ),
@@ -520,7 +520,4 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     }
   }
 
-  String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
-  }
 }

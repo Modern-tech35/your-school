@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'gradient_app_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'forgot_password_screen.dart';
 import 'models/user_profile.dart';
 
@@ -38,6 +41,116 @@ class _AuthScreenState extends State<AuthScreen>
     _signUpPasswordController.dispose();
     _signUpConfirmPasswordController.dispose();
     super.dispose();
+  }
+
+  Future<void> _signInWithGoogle() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+    try {
+      UserCredential userCredential;
+
+      if (kIsWeb) {
+        // Web: use Firebase Auth popup with the Google provider.
+        final googleProvider = GoogleAuthProvider()
+          ..addScope('email')
+          ..addScope('profile');
+        userCredential =
+            await FirebaseAuth.instance.signInWithPopup(googleProvider);
+      } else {
+        // Android: use the google_sign_in plugin.
+        final googleUser = await GoogleSignIn().signIn();
+        if (googleUser == null) {
+          // User closed the Google picker.
+          setState(() => _isLoading = false);
+          return;
+        }
+        final googleAuth = await googleUser.authentication;
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+        userCredential =
+            await FirebaseAuth.instance.signInWithCredential(credential);
+      }
+
+      // Create a default student profile if this is the user's first login.
+      final uid = userCredential.user!.uid;
+      final doc =
+          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+      if (!doc.exists) {
+        final newUser = UserProfile(
+          name: userCredential.user!.displayName ?? 'New User',
+          gender: 'Not specified',
+          age: 18,
+          avatar: 'default_avatar',
+          role: 'student',
+        );
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(uid)
+            .set(newUser.toMap());
+      }
+
+      // Navigate to role check screen
+      if (mounted) {
+        Navigator.of(context).pushReplacementNamed('/role_check');
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'popup-closed-by-user' ||
+          e.code == 'cancelled-popup-request') {
+        setState(() => _isLoading = false);
+        return;
+      }
+      setState(() {
+        _errorMessage = e.message;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = e.toString();
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  Widget _buildGoogleSignInButton() {
+    return Column(
+      children: [
+        const Row(
+          children: [
+            Expanded(child: Divider()),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8),
+              child: Text('or continue with'),
+            ),
+            Expanded(child: Divider()),
+          ],
+        ),
+        const SizedBox(height: 16),
+        SizedBox(
+          width: double.infinity,
+          child: OutlinedButton.icon(
+            onPressed: _isLoading ? null : _signInWithGoogle,
+            icon: const Icon(Icons.g_mobiledata, size: 32),
+            label: const Text(
+              'Continue with Google',
+              style: TextStyle(fontSize: 16),
+            ),
+            style: OutlinedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              side: const BorderSide(color: Colors.grey),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   Future<void> _signIn() async {
@@ -115,10 +228,10 @@ class _AuthScreenState extends State<AuthScreen>
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false,
+    return PopScope(
+      canPop: false,
       child: Scaffold(
-        appBar: AppBar(
+        appBar: GradientAppBar(
           title: const Text('Authentication'),
           automaticallyImplyLeading: false,
           centerTitle: true,
@@ -201,7 +314,7 @@ class _AuthScreenState extends State<AuthScreen>
                         Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: Colors.red.withOpacity(0.1),
+                            color: Colors.red.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
@@ -230,6 +343,8 @@ class _AuthScreenState extends State<AuthScreen>
                                 ),
                               ),
                       ),
+                      const SizedBox(height: 20),
+                      _buildGoogleSignInButton(),
                     ],
                   ),
                 ),
@@ -297,7 +412,7 @@ class _AuthScreenState extends State<AuthScreen>
                           padding: const EdgeInsets.all(8),
                           margin: const EdgeInsets.only(top: 16),
                           decoration: BoxDecoration(
-                            color: Colors.red.withOpacity(0.1),
+                            color: Colors.red.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
@@ -326,6 +441,8 @@ class _AuthScreenState extends State<AuthScreen>
                                 ),
                               ),
                       ),
+                      const SizedBox(height: 20),
+                      _buildGoogleSignInButton(),
                     ],
                   ),
                 ),

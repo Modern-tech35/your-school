@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'gradient_app_bar.dart';
 import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
@@ -25,7 +26,7 @@ class _CloudinaryUploadScreenState extends State<CloudinaryUploadScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: GradientAppBar(
         title: const Text('Upload to Cloudinary'),
       ),
       body: ListView(
@@ -115,7 +116,7 @@ class _CloudinaryUploadScreenState extends State<CloudinaryUploadScreen> {
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: Colors.green.withOpacity(0.1),
+                          color: Colors.green.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(color: Colors.green),
                         ),
@@ -147,7 +148,7 @@ class _CloudinaryUploadScreenState extends State<CloudinaryUploadScreen> {
                                 ElevatedButton.icon(
                                   onPressed: () async {
                                     await Clipboard.setData(ClipboardData(text: _uploadedUrl!));
-                                    if (mounted) {
+                                    if (context.mounted) {
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         const SnackBar(content: Text('URL copied to clipboard')),
                                       );
@@ -176,7 +177,7 @@ class _CloudinaryUploadScreenState extends State<CloudinaryUploadScreen> {
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: Colors.red.withOpacity(0.1),
+                          color: Colors.red.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(color: Colors.red),
                         ),
@@ -302,12 +303,12 @@ class _CloudinaryUploadScreenState extends State<CloudinaryUploadScreen> {
     return ElevatedButton(
       onPressed: _isUploading ? null : onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: color.withOpacity(0.1),
+        backgroundColor: color.withValues(alpha: 0.1),
         foregroundColor: color,
         padding: const EdgeInsets.symmetric(vertical: 20),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
-          side: BorderSide(color: color.withOpacity(0.3)),
+          side: BorderSide(color: color.withValues(alpha: 0.3)),
         ),
       ),
       child: Column(
@@ -332,7 +333,7 @@ class _CloudinaryUploadScreenState extends State<CloudinaryUploadScreen> {
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: const Color(0xFF001F3F).withOpacity(0.1),
+            color: const Color(0xFF001F3F).withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(

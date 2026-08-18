@@ -1,4 +1,4 @@
-package com.example.firebase_roocode_project_notes
+package com.moderntech.yourschool
 
 import io.flutter.embedding.android.FlutterActivity
 

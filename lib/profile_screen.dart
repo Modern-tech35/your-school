@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'gradient_app_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'models/user_profile.dart';
@@ -86,6 +87,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _isLoading = false;
         });
       } catch (e) {
+        if (!mounted) return;
         setState(() {
           _isLoading = false;
         });
@@ -99,7 +101,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _signOut(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
-    if (mounted) {
+    if (context.mounted) {
       Navigator.of(context).pushNamedAndRemoveUntil('/auth', (route) => false);
     }
   }
@@ -108,7 +110,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Color(0xFF212121).withOpacity(0.05),
+        color: Color(0xFF212121).withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(12),
       ),
       child: LayoutBuilder(
@@ -135,14 +137,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
                   decoration: BoxDecoration(
-                    color: isSelected ? const Color(0xFF4FC3F7).withOpacity(0.2) : Colors.transparent,
+                    color: isSelected ? const Color(0xFF4FC3F7).withValues(alpha: 0.2) : Colors.transparent,
                     border: Border.all(
-                      color: isSelected ? const Color(0xFF4FC3F7) : Colors.grey.withOpacity(0.5),
+                      color: isSelected ? const Color(0xFF4FC3F7) : Colors.grey.withValues(alpha: 0.5),
                       width: isSelected ? 3 : 1,
                     ),
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: isSelected
-                        ? [BoxShadow(color: const Color(0xFF4FC3F7).withOpacity(0.3), blurRadius: 8)]
+                        ? [BoxShadow(color: const Color(0xFF4FC3F7).withValues(alpha: 0.3), blurRadius: 8)]
                         : null,
                   ),
                   child: Image.asset(
@@ -190,7 +192,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(
+      appBar: GradientAppBar(
         title: const Text('Profile'),
         actions: [
           if (_isEditing)
